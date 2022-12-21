@@ -102,5 +102,3 @@ Lets you specify the language in your code, therefore color-highlighting it.
   "age": 25
 }
 ```
-
-The end.
