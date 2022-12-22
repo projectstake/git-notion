@@ -5,6 +5,11 @@ import glob
 from configparser import ConfigParser
 import re
 
+import nltk
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+import titleize
+
 from pathlib import Path
 
 from notion.block import PageBlock
@@ -15,6 +20,9 @@ from md2notion.upload import upload
 
 TOKEN = os.getenv("NOTION_TOKEN_V2", "")
 _client = None
+
+def title(s):
+    return titleize.titleize(s.replace("_", " "))
 
 
 def get_client():
@@ -37,7 +45,8 @@ def get_or_create_page(base_page, title):
 
 def create_path_pages(base_page, path_pages):
     for page in path_pages:
-        base_page = get_or_create_page(base_page, page)
+        page_title = title(page)
+        base_page = get_or_create_page(base_page, page_title)
     return base_page
 
 
@@ -65,15 +74,16 @@ def sync_to_notion(repo_root: str = "."):
     config = ConfigParser()
     config.read(os.path.join(repo_root, "setup.cfg"))
     repo_name = os.path.basename(os.getcwd())
+    book_title = title(repo_name)
 
     root_page_url = os.getenv("NOTION_ROOT_PAGE") or config.get('git-notion', 'notion_root_page')
     ignore_regex = os.getenv("NOTION_IGNORE_REGEX") or config.get('git-notion', 'ignore_regex', fallback=None)
     root_page = get_client().get_block(root_page_url)
-    repo_page = get_or_create_page(root_page, repo_name)
+    front_page = get_or_create_page(root_page, book_title)
     for path in glob.glob("**/*.md", recursive=True):
         if ignore_regex is None or not re.match(ignore_regex, path):
             print(path)
             path_pages = path.split(os.path.sep)[:-1]
-            base_page = create_path_pages(repo_page, path_pages)
-            page_title = Path(path).stem
+            base_page = create_path_pages(front_page, path_pages)
+            page_title = title(Path(path).stem)
             upload_file(base_page, path, page_title)
