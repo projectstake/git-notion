@@ -22,7 +22,7 @@ TOKEN = os.getenv("NOTION_TOKEN_V2", "")
 _client = None
 
 def title(s):
-    return titleize.titleize(s.replace("_", " "))
+    return titleize.titleize(s.replace("_", " ").replace("-", " "))
 
 
 def get_client():
