@@ -1,5 +1,4 @@
-Git Notion
-==========
+# Git Notion
 
 Syncs Github markdown files in your repository to Notion.
 
@@ -8,14 +7,15 @@ This utility is described in the following [blog post](https://www.swiftlane.com
 See example [Notion page](https://www.notion.so/git_notion-195c08d3d14140eb9a35ac00f9a0f078).
 
 ## Installation
+
 ```
-pip install git-notion
+pip install 'git-notion @ git+https://github.com/projectstake/git-notion@master'
 ```
 
 or for local installation:
 
 ```bash
-git clone https://github.com/NarekA/git-notion.git
+git clone https://github.com/projectstake/git-notion.git
 cd git-notion
 pip install -e .
 ```
@@ -27,6 +27,7 @@ pip install -e .
 `NOTION_IGNORE_REGEX` - Regex for paths to ignore.
 
 These environment variables can be set.
+
 ```bash
 export NOTION_TOKEN_V2=<YOUR_TOKEN>
 export NOTION_ROOT_PAGE="https://www.notion.so/..."  # Can be in setup.cfg as well
@@ -34,6 +35,7 @@ export NOTION_IGNORE_REGEX="models/.*"               # Can be in setup.cfg as we
 ```
 
 These parameters can be set in the `setup.cfg` for the repo.
+
 ```
 [git-notion]
 ignore_regex = models/.*
@@ -49,7 +51,6 @@ git-notion
 # To upload another directory
 git-notion --path path/to/your/repo
 ```
-
 
 ## Pushing to PYPI
 
